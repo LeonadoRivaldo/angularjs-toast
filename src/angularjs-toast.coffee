@@ -46,6 +46,7 @@ angular.module 'angularjsToast', ['ngSanitize', 'ngAnimate']
       # user parameters
       args.duration = if args.duration then args.duration else duration
       args.maxToast = if args.maxToast then args.maxToast else maxToast
+      args.removeOnTimeOut = if typeof args.removeOnTimeOut != 'undefined' && args.removeOnTimeOut != null then args.removeOnTimeOut else true        
       #if user send false args to dont insert from top it will insert anyways, coz false goes true
       args.insertFromTop = if typeof args.insertFromTop != 'undefined' && args.insertFromTop != null then args.insertFromTop else true
       args.removeFromTop = if typeof args.removeFromTop != 'undefined' && args.removeFromTop != null then args.removeFromTop else false
@@ -96,8 +97,8 @@ angular.module 'angularjsToast', ['ngSanitize', 'ngAnimate']
       pushToArray = ->
         if args.insertFromTop then scope.$toastMessages.unshift(json) else scope.$toastMessages.push(json)
         #scope update bug correction
-        _scopeUpdate()          
-        timeout(json)
+        _scopeUpdate()
+        if args.removeOnTimeOut then timeout(json)
         return
 
       # remove last/ first element from ->scope.$toastMessages when the maxlength is reached
