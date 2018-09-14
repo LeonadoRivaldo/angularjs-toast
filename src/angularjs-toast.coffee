@@ -11,7 +11,7 @@ angular.module 'angularjsToast', ['ngSanitize', 'ngAnimate']
     '    <li class="animate-repeat" ng-repeat="data in $toastMessages track by data.id">'+
     '      <div class="alert alert-dismissible" ng-class="::$toastClass">'+
     '        <span ng-bind-html="data.message"></span>'+
-    '        <a href="javascript:void(0)" class="close" data-dismiss="alert" aria-label="close" title="close" ng-click="$close($index)" ng-if="$dismissible">×</a>'+
+    '        <a href="javascript:void(0)" class="close" data-dismiss="alert" aria-label="{{$closeTitle}}" title="{{$closeTitle}}" ng-click="$close($index)" ng-if="$dismissible">×</a>'+
     '      </div>'+
     '    </li>'+
     '  </ul>'+
@@ -35,21 +35,21 @@ angular.module 'angularjsToast', ['ngSanitize', 'ngAnimate']
 
     # toast function
     toast = (args) ->
-       
+
       #function to manualy update scope;
       _scopeUpdate = ->
         setTimeout ->
           scope.$apply()
         , 10
-       
-      
+
+
       # user parameters
       args.duration = if args.duration then args.duration else duration
       args.maxToast = if args.maxToast then args.maxToast else maxToast
-      args.removeOnTimeOut = if typeof args.removeOnTimeOut != 'undefined' && args.removeOnTimeOut != null then args.removeOnTimeOut else true        
-      #if user send false args to dont insert from top it will insert anyways, coz false goes true
-      args.insertFromTop = if typeof args.insertFromTop != 'undefined' && args.insertFromTop != null then args.insertFromTop else true
-      args.removeFromTop = if typeof args.removeFromTop != 'undefined' && args.removeFromTop != null then args.removeFromTop else false
+      #new option to the user be able to dont remove.
+      args.removeOnTimeOut = if typeof args.removeOnTimeOut != 'undefined' then args.removeOnTimeOut else true
+      args.insertFromTop = if typeof args.insertFromTop != 'undefined' then args.insertFromTop else true
+      args.removeFromTop = if typeof args.removeFromTop != 'undefined' then args.removeFromTop else false
       args.container = if args.container then document.querySelector(args.container) else container
 
       # values that bind to HTML
@@ -59,6 +59,7 @@ angular.module 'angularjsToast', ['ngSanitize', 'ngAnimate']
       scope.$toastClass = if args.className then args.className else toastClass
       scope.$dismissible = if args.dismissible then args.dismissible else dismissible
       scope.$message = if args.message then args.message else emptyMessage
+      scope.$closeTitle = if args.closeTitle then args.closeTitle else 'close'
 
       # check if templates are present in the body
       # append to body
